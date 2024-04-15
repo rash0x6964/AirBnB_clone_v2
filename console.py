@@ -131,9 +131,8 @@ class HBNBCommand(cmd.Cmd):
             if res:
                 new_instance.__dict__[res[0]] = res[1]
 
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
-        storage.save()
 
     def valid_param(self, arg):
         """validates parameter
@@ -221,20 +220,22 @@ class HBNBCommand(cmd.Cmd):
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
 
-    def do_all(self, args):
+    def do_all(self, line):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
+        print_list, objects = [], {}
 
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
+        if line:
+            args = line.split(' ')
+            if args[0] not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
+            objects = storage.all(args[0])
+            for k, v in objects.items():
+                if k.split('.')[0] == args[0]:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            objects = storage.all()
+            for k, v in objects.items():
                 print_list.append(str(v))
 
         print(print_list)
