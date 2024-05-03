@@ -13,10 +13,10 @@ def do_clean(number=0):
     if number < 1:
         number = 1
 
-    versions_dir = 'versions/'
-    archives = sorted(os.listdir(versions_dir), reverse=True)
-    for archive in archives[number:]:
-        local('rm versions/{}'.format(archive))
+    archives = sorted(os.listdir("versions"))
+    [archives.pop() for i in range(number)]
+    with lcd("versions"):
+        [local("rm ./{}".format(a)) for a in archives]
 
     with cd("/data/web_static/releases"):
         archives = run("ls -tr").split()
