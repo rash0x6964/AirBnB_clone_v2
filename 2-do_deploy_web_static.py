@@ -14,34 +14,26 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
 
-    if put(archive_path, '/tmp/').failed is True:
-        return False
+    try:
+        put(archive_path, '/tmp/')
 
-    archive_name = os.path.basename(archive_path)
-    folder_name = archive_name.split('.')[0]
-    release_path = '/data/web_static/releases/{}/'.format(folder_name)
+        archive_name = os.path.basename(archive_path)
+        folder_name = archive_name.split('.')[0]
+        release_path = '/data/web_static/releases/{}/'.format(folder_name)
+        
+        run("rm -rf {}".format(release_path))
+        run('mkdir -p {}'.format(release_path))
+        run('tar -xzf /tmp/{} -C {}'.format(archive_name, release_path))
 
-    if run('mkdir -p {}'.format(release_path)).failed is True:
-        return False
-    if run('tar -xzf /tmp/{} -C {}'.
-           format(archive_name, release_path)).failed is True:
-        return False
+        run('rm /tmp/{}'.format(archive_name))
 
-    if run('rm /tmp/{}'.format(archive_name)).failed is True:
-        return False
+        run('mv {}web_static/* {}'.format(release_path, release_path))
+        run('rm -rf {}web_static'.format(release_path))
 
-    if run('mv {}web_static/* {}'.
-           format(release_path, release_path)).failed is True:
-        return False
+        run('rm -rf /data/web_static/current')
 
-    if run('rm -rf {}web_static'.format(release_path)).failed is True:
-        return False
+        run('ln -s {} /data/web_static/current'.format(release_path))
 
-    if run('rm -rf /data/web_static/current').failed is True:
+        return True
+    except Exception as e:
         return False
-
-    if run('ln -s {} /data/web_static/current'.
-           format(release_path)).failed is True:
-        return False
-
-    return True
