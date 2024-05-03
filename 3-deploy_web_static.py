@@ -10,6 +10,7 @@ from datetime import datetime
 
 env.hosts = ['54.236.54.151	', '34.229.189.161']
 
+
 def do_pack():
     """Create a tar gzipped archive of the directory web_static."""
 
@@ -50,6 +51,7 @@ def do_deploy(archive_path):
         return True
     except Exception as e:
         return False
+
 
 def deploy():
     """Create and distribute an archive to a web server."""
