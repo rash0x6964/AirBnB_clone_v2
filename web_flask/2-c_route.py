@@ -5,8 +5,10 @@
     Routes:
         /: displays 'Hello HBNB!'
         /hbnb: display “HBNB”
+        /c/<text>: display “C ” followed by the value of the text
 """
 from flask import Flask
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -21,6 +23,13 @@ def hello_hbnb():
 def hbnb():
     """Displays 'HBNB'"""
     return "HBNB"
+
+
+@app.route("/c/<text>", strict_slashes=False)
+def c(text):
+    """Displays 'C' followed by the value of the <text>"""
+    text = text.replace("_", " ")
+    return f"C {escape(text)}"
 
 
 if __name__ == "__main__":
