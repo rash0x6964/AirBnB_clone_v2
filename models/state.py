@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import environ as env
+import models.base_model
 import models
 
 class State(BaseModel, Base):
@@ -22,6 +23,6 @@ class State(BaseModel, Base):
         if env.get('HBNB_TYPE_STORAGE') == 'db':
             return self.__cities
         return [
-            v for v in models.storage.all(models.City).values()
+            v for v in models.storage.all(models.city.City).values()
             if v.state_id == self.id
         ]
