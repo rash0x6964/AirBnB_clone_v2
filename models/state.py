@@ -7,6 +7,7 @@ from os import environ as env
 import models.base_model
 import models
 
+
 class State(BaseModel, Base):
     """ State class """
 
